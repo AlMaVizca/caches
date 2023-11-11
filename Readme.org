@@ -9,7 +9,7 @@ Feel free to raise any issue or PR
 - [[#how-to-use-it][How to use it?]]
   - [[#systemd-socket-activation][Systemd socket activation]]
 - [[#clients-configuration][Clients configuration]]
-  - [[#making-it-simple][Making it simple]]
+  - [[#making-it-simpler][Making it simpler]]
   - [[#configurations][Configurations]]
 - [[#credits][Credits]]
 
@@ -42,6 +42,13 @@ more on that later.
 This means that there is an extra step before any request, and since we are
 thinking about optimizations, a better way to do it is using systemd socket
 activation.
+
+All the options are described when you use:
+#+begin_src sh
+  make help
+#+end_src
+
+*Note:* Look at [[Making it simpler]]
 
 ** Systemd socket activation
 The idea with this is optimize resources, having caches running without being
@@ -79,7 +86,8 @@ The easiest way to do it on containers is:
   make build i=python
 #+end_src
 
-** Making it simple
+** Making it simpler
+
 To avoid jumping directories to create a new container image, is good to have an
 alias to the Makefile, and then use it as a global command.
 So you can create the alias in your shell configuration.
