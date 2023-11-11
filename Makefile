@@ -18,10 +18,10 @@ rebuild: ## Build image using customizations i=python
 clean:  ## Get the original image
 	@docker pull $(i)
 
-start: # Start all cache services c=
+start: network ## Start all cache services c=
 	@docker-compose up -d ${c}
 
-stop: # Stop all services
+stop: ## Stop all services
 	@docker-compose stop
 
 start-service: # start c=<cache service> to be used with socket activation
@@ -41,3 +41,6 @@ logs-apt: ## Watch apt cache logs
 
 install-sockets: ## c=<cache_service> to enable socket activation
 	./socket-activation/setup.sh $(c)
+
+network: ## Create proxy network
+	-@docker network create lb

@@ -49,6 +49,19 @@ All the options are described when you use:
 
 *Note:* Look at [[Making it simpler]]
 
+** Known errors
+
+*** /network lb declared as external, but could not be found/
+Getting this error might get you thinking why is the lb network required.
+Short answer it is not required, also if you check the /docker-compose.yml/ file
+there will be many /labels/ that are not required for the service. Those are
+helpers to access the caches from a web browser. I'll explain more later.
+The easiest solution is:
+#+begin_src sh
+  make network
+#+end_src
+
+
 ** Systemd socket activation
 The idea with is to optimize resources, having caches running without being
 used is a waste of resources. Using socket activations is possible to start the
