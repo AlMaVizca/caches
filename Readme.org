@@ -1,5 +1,4 @@
 #+Title: Containerized Caches
-#+OPTIONS: toc:2
 
 Feel free to raise any issue or PR
 
@@ -25,18 +24,18 @@ So as a summary, it's an optimization for the whole environment.
 * Which caches are available?
 For the time being, this setup provides caches for:
 - apt (Debian based distros)
-- composer (Php packaging)
+- composer (PHP packaging)
 - npm (Node packaging)
 - pip (Python packaging)
 
 * How to use it?
-You could go ahead an run:
+You could go ahead and run:
 #+begin_src sh
   make start
 #+end_src
-Without any parameter, it will start all caches, if you are intrested only in
+Without any parameter, it will start all caches, if you are interested only in
 one, then use =make start c=pip= for example.
-After that, you need to setup the proxy configuration in your packaging system,
+After that, you need to set up the proxy configuration in your packaging system,
 more on that later.
 
 This means that there is an extra step before any request, and since we are
@@ -51,7 +50,7 @@ All the options are described when you use:
 *Note:* Look at [[Making it simpler]]
 
 ** Systemd socket activation
-The idea with this is optimize resources, having caches running without being
+The idea with is to optimize resources, having caches running without being
 used is a waste of resources. Using socket activations is possible to start the
 cache, once the first request is made.
 
@@ -63,16 +62,16 @@ For apt:
   make install-sockets c=apt
 #+end_src
 
-*** Explain how this works
+*** How does this work?
 In the socket-activation/templates folder are 3 files.
-- cache-EXAMPLE.socket
+- /cache-EXAMPLE.socket/
   This is the starting point, it will listen on GLOBAL_IP:PORT_SERVICE and when
-  the first request arrives, the cache-EXAMPLE.service will be started.
-- cache-EXAMPLE.service
+  the first request arrives, the /cache-EXAMPLE.service/ will be started.
+- /cache-EXAMPLE.service/
   Here is it used as a proxy between the GLOBAL_IP and the SERVICE_IP.
-  It will request to start cache-EXAMPLE-container.service and send the received
+  It will request to start /cache-EXAMPLE-container.service/ and send the received
   request
-- cache-EXAMPLE-container.service
+- /cache-EXAMPLE-container.service/
   The definition of how to start the service.
 
 These three files are required as a generic way to delegate the socket
@@ -80,7 +79,7 @@ activation, if the services are able to receive a socket, then only two files
 will be used and cache-EXAMPLE.service, will provide the socket to the original service.
 
 * Clients configuration
-It's possible to setup local and containers to use this caches.
+It's possible to set up local and containers to use these caches.
 The easiest way to do it on containers is:
 #+begin_src sh
   make build i=python
@@ -99,20 +98,20 @@ And then use it anywhere like =cache build id=python=
 
 ** Configurations
 Without changes, the proxies are set to use the domains:
-- cache-apt.srv
-- cache-composer.srv
-- cache-npm.srv
-- cache-pip.srv
+- /cache-apt.srv/
+- /cache-composer.srv/
+- /cache-npm.srv/
+- /cache-pip.srv/
 
 If you are using dnsmasq with NetworkManagers, the easiest way to do it, is to
 resolve the domain srv to the GLOBAL_IP defined in the /.env/ file.
 
-- /etc/NetworkManager/dnsmasq.d/local-resolutions.conf
+- //etc/NetworkManager/dnsmasq.d/local-resolutions.conf/
 #+begin_example
 address=/srv/172.17.0.1
 #+end_example
 
-and restart NetworkManager:
+and restart /NetworkManager/:
 
 #+begin_src sh
 sudo systemd restart NetworkManager
@@ -125,19 +124,19 @@ sudo systemd restart NetworkManager
 - Add layers with packaging caches customizations
 - Tag the new image as <image>
 
-Doing this, we avoid to modify the Dockerfiles for any project.
+Doing this, we avoid modifying the Dockerfiles for any project.
 
 * Credits
 
 - [[https://github.com/krom/docker-compose-makefile][Docker compose Makefile]]
-  Colors and initizalization setup for Makefile and docker composer
+  Colors and initialization setup for Makefile and docker composer
 - [[https://hub.docker.com/r/isaaceindhoven/velocita-proxy][Velocita Proxy Docker image]]
-  Velocita acts as a caching reverse proxy to Composer repositories.
+  /Velocita/ acts as a caching reverse proxy to Composer repositories.
 - [[https://hub.docker.com/r/sameersbn/apt-cacher-ng][sameersbn/apt-cacher-ng]]
-  Apt-Cacher NG is a caching proxy, specialized for package files from Linux
+  /Apt-Cacher NG/ is a caching proxy, specialized for package files from Linux
   distributors, primarily for Debian (and Debian based) distributions but not
   limited to those.
 - [[https://github.com/aanatoly/docker-pip-cache][Docker pip cache]]
-  This image runs devpi server serving as a caching proxy to the main index.
+  This image runs /devpi/ server serving as a caching proxy to the main index.
   Here is the link to the original repo. I've created a [[https://github.com/AlMaVizca/docker-pip-cache][fork]] because the PR with
   changes wasn't updated.
