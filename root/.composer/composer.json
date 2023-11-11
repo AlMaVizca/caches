@@ -1,0 +1,10 @@
+{
+    "config": {
+        "allow-plugins": {
+            "isaac/composer-velocita": true
+        }
+    },
+    "require": {
+        "isaac/composer-velocita": "^5.1"
+    }
+}

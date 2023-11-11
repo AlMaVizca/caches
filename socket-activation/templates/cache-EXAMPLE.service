@@ -1,0 +1,13 @@
+[Unit]
+Description=Intermediate proxy socket for EXAMPLE cache
+
+Requires=cache-EXAMPLE-container.service
+After=cache-EXAMPLE-container.service
+Requires=cache-EXAMPLE.socket
+After=cache-EXAMPLE.socket
+
+[Service]
+EnvironmentFile=CACHE_PATH/.env
+ExecStart=/usr/lib/systemd/systemd-socket-proxyd --exit-idle-time="10m" ${SERVICE_IP}:${PORT_EXAMPLE}
+
+NonBlocking=true

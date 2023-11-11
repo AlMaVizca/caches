@@ -1,0 +1,63 @@
+* Containerized caches
+
+*Note*: Documentation in progress
+Feel free to raise any issue or PR
+
+** Motivation
+While working with containers, it might be needed to modify the Dockerfile a
+couple of times, which makes to invalidate the cache. Which means that you might
+need to wait until the build finish. But this is not the only reason, sometimes
+your network might be metered - specially if you are a digital nomad - then it
+might imply saving some money too.
+
+So as a summary, it's an optimization for the whole environment.
+
+** Which caches are available?
+For the time being, this setup provides caches for:
+- apt (Debian based distros)
+- composer (Php packaging)
+- npm (Node packaging)
+- pip (Python packaging)
+
+** How to use it?
+You could go ahead an run:
+#+begin_src sh
+  make start
+#+end_src
+Without any parameter, it will start all caches, if you are intrested only in
+one, then use `make start c=pip` for example.
+After that, you need to setup the proxy configuration in your packaging system,
+more on that later.
+
+This means that there is an extra step before any request, and since we are
+thinking about optimizations, a better way to do it is using systemd socket
+activation.
+
+*** Systemd socket activation
+The idea with this is optimize resources, having caches running without being
+used is a waste of resources. Using socket activations is possible to start the
+cache, once the first request is made.
+
+To make it work, enable the socket activation for the service that you want.
+At the moments, the options are `apt`, `composer`, `npm` and `pip`.
+For apt:
+#+begin_src sh
+  make install-sockets c=apt
+#+end_src
+
+**** TODO Explain how this works
+
+*** Clients configuration
+It's possible to setup local and containers to use this caches.
+The easiest way to do it on containers is:
+#+begin_src sh
+  make build i=python
+#+end_src
+
+**** How does it work?
+- Pull i=<image>
+- Tag it as <image>-original
+- Add layers with packaging caches customizations
+- Tag the new image as <image>
+
+Doing this, we avoid to modify the Dockerfiles for any project.

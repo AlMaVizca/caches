@@ -1,0 +1,12 @@
+[Unit]
+Description=EXAMPLE cache container
+
+[Service]
+EnvironmentFile=CACHE_PATH/.env
+# Use docker or podman, as you prefer it
+WorkingDirectory=CACHE_PATH
+ExecStart=make start-service c=EXAMPLE
+ExecStop=make stop-service c=EXAMPLE
+
+[Install]
+WantedBy=multi-user.target

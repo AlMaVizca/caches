@@ -1,0 +1,77 @@
+version: "3"
+services:
+  npm:
+    image: docker.io/almavizca/npm-proxy-cache
+    container_name: cache_npm
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.cache-npm.rule: "Host(`cache-npm.$DOMAIN`)"
+      traefik.http.services.cache-npm.loadbalancer.server.port: "8080"
+      traefik.http.routers.cache-npm.tls: "false"
+      traefik.docker.network: lb
+    networks:
+      - lb
+    ports:
+      - "${SERVICE_IP}:${PORT_npm}:8080"
+    volumes:
+      - 'npm:/cache'
+
+
+  pip:
+    image: docker.io/almavizca/pip-cache
+    container_name: cache_pip
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.cache-pip.rule: "Host(`cache-pip.$DOMAIN`)"
+      traefik.http.services.cache-pip.loadbalancer.server.port: "3141"
+      traefik.http.routers.cache-pip.tls: "false"
+      traefik.docker.network: lb
+    volumes:
+      - pip:/data
+    ports:
+      - "${SERVICE_IP}:${PORT_pip}:3141"
+
+  apt:
+    image: docker.io/sameersbn/apt-cacher-ng
+    container_name: cache_apt
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.cache-apt.rule: "Host(`cache-apt.$DOMAIN`)"
+      traefik.http.services.cache-apt.loadbalancer.server.port: "3142"
+      traefik.http.routers.cache-apt.tls: "false"
+      traefik.docker.network: lb
+    volumes:
+      - apt:/var/cache/apt-cacher-ng
+    ports:
+      - "${SERVICE_IP}:${PORT_apt}:3142"
+
+
+  composer:
+    image: docker.io/isaaceindhoven/velocita-proxy
+    container_name: cache_composer
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.cache-composer.rule: "Host(`cache-composer.$DOMAIN`)"
+      traefik.http.services.cache-composer.loadbalancer.server.port: "8080"
+      traefik.http.routers.cache-composer.tls: "false"
+      traefik.docker.network: lb
+    # environments:
+    #   MIRROR_PACKAGIST_URL: https://repo.packagist.org
+    #   MIRROR_PACKAGIST_TYPE: composer
+    #   MIRROR_GITHUB_CODELOAD_URL: https://codeload.github.com
+    volumes:
+      - composer:/var/cache/velocita
+    ports:
+      - "${SERVICE_IP}:${PORT_composer}:8080"
+
+
+networks:
+  lb:
+    name: lb
+    external: true
+
+volumes:
+  pip: null
+  apt: null
+  npm: null
+  composer: null

@@ -1,0 +1,11 @@
+[Unit]
+Description=Socket for EXAMPLE cache
+
+
+[Socket]
+
+ListenStream=GLOBAL_IP:PORT_EXAMPLE
+Transparent=True
+
+[Install]
+WantedBy=sockets.target
