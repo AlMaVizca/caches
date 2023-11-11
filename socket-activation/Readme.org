@@ -1,3 +1,0 @@
-* Socket activations
-
-At the moment these units are using [[https://github.com/cherti/socket-activate][socket-activate]] to be able to "proxy" the socket
