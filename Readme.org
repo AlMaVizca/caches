@@ -76,6 +76,8 @@ For apt:
 #+end_src
 
 *** How does this work?
+Please take a look at [[https://github.com/AlMaVizca/dev-proxy#socket-activation][this documentation]] where I'm using the same idea.
+
 In the socket-activation/templates folder are 3 files.
 - /cache-EXAMPLE.socket/
   This is the starting point, it will listen on GLOBAL_IP:PORT_SERVICE and when
