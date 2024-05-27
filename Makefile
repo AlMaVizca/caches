@@ -8,9 +8,10 @@ export
 
 build: ## Build image i=python
 	@docker pull $(i)
-	@cat Dockerfile | perl -pe "s/IMAGE/$(i)/g" > .Dockerfile.$(i)
+	$(eval _DV := $(shell echo $(i) | tr "/" "-"))
+	@cat Dockerfile | perl -pe "s;IMAGE;$(i);" > .Dockerfile.$(_DV)
 	@docker image tag $(i) $(i)-original
-	@docker build -t $(i) -f .Dockerfile.$i .
+	@docker build -t $(i) -f .Dockerfile.$(_DV) .
 
 rebuild: ## Build image using customizations i=python
 	@docker build -t $(i) -f .Dockerfile.$i .
